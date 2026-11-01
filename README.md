@@ -39,7 +39,7 @@ Operatory działają od prawej do lewej, a oba kodowania rozpoczynają od stanu 
 Dla 10 powtórzeń definiujemy różnicę:
 
 $$
-\Delta = \frac{1}{10}\sum_{s=1}^{10}\left(\operatorname{acc}_{\mathrm{ZZ},s} - \operatorname{acc}_{\mathrm{RY},s}\right).
+\Delta = \frac{1}{10}\sum_{s=1}^{10}\left(\mathrm{acc}_{\mathrm{ZZ},s} - \mathrm{acc}_{\mathrm{RY},s}\right).
 $$
 
 Dokładności zapisujemy jako ułamki od 0 do 1. Hipoteza przewiduje:
