@@ -1,0 +1,28 @@
+{
+  "hypothesis_commit": "73994d8d863ad04dfb5d80a8ed004c5c67165b68",
+  "protocol_sha256": "751fb0e6678227d6329eda6d86245dabdc713cf016e8eda3cd6e6b9ab1866f7e",
+  "before_first_full_experiment": true,
+  "test_result": "18 passed in 5.10s; exit 0",
+  "red_result": "pytest collection failed: src.encoding missing; exit 1; then 17 passed, runner missing; exit 1",
+  "library_versions": {
+    "qiskit": "2.6.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "pytest": "9.2.0"
+  },
+  "code_sha256": {
+    "src\\data.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src\\dataset.py": "e90ca2b4b736e27cbdb46b0603a66b72b18b43d26df8c485344205714ada5a82",
+    "src\\encoding.py": "535897ab9cea7b661b2077fe8d9c027e5931751c23281e9421a397061ff1df5c",
+    "src\\encodings.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src\\evaluate.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src\\evaluation.py": "65de3fd4cf85a93bba6eb94fb08c83090732dd5b9f4b9f2ca3b2a8b91e8517d3",
+    "src\\model.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src\\train.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src\\training.py": "39c59cc48bc8814a9644e6a0e7b0505c05d0789f7b067c6ee3a030ec79e33daa",
+    "src\\variational_classifier.py": "4049e379d2b58989c75818cf71f869556c53f335534cc5c222c8ec5b780b6035",
+    "src\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_experiment.py": "7fbbde02f82f15fa73ff8e45f308307a361f87caaff062a064011e6702be8491"
+  }
+}

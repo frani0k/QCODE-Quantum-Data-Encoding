@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "models": 20,
+  "exact_equal": [
+    "initial",
+    "theta",
+    "history",
+    "train_accuracy",
+    "test_accuracy",
+    "final_loss"
+  ],
+  "excluded": "training_seconds: wall clock is not deterministic"
+}

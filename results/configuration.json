@@ -1,0 +1,93 @@
+{
+  "protocol": {
+    "schema_version": 1,
+    "frozen_before_experiment": true,
+    "hypothesis_commit": "73994d8d863ad04dfb5d80a8ed004c5c67165b68",
+    "threshold_pp": 5,
+    "qubits": 2,
+    "samples": 1000,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "distribution": "independent Uniform[-1,1), two features",
+    "labels": "int(x0*x1 < 0)",
+    "scaling": "(x+1)*pi/2; known bounds, no fitting",
+    "split": {
+      "train": 800,
+      "test": 200,
+      "method": "per-class shuffled indices; floor(0.2*n_class), remaining test slots by largest fractional remainder, ties class 0 first; shuffle both splits",
+      "rng": "independent default_rng(seed) for generation, splitting, initialization"
+    },
+    "encoding": {
+      "RY": "ry(x0,0); ry(x1,1)",
+      "ZZ": "h(0); h(1); rz(-2*x0,0); rz(-2*x1,1); rzz(-2*(pi-x0)*(pi-x1),0,1)",
+      "order": "Qiskit little endian |q1 q0>; input feature j maps to qubit j",
+      "repetitions": 1
+    },
+    "ansatz": {
+      "layers": 2,
+      "per_layer": "ry(theta[2*l],0); ry(theta[2*l+1],1); cx(0,1)",
+      "parameters": 4
+    },
+    "observable": "IZ (Z on qubit 0)",
+    "probability": "(1-<IZ>)/2",
+    "decision": "p>=0.5",
+    "simulation": "exact complex128 statevector, no noise, no shots",
+    "initialization": "default_rng(seed).uniform(-0.1,0.1,4), copied for both variants",
+    "training": {
+      "steps": 100,
+      "batch": "full train",
+      "optimizer": "Adam",
+      "learning_rate": 0.05,
+      "beta1": 0.9,
+      "beta2": 0.999,
+      "epsilon": 1e-08,
+      "loss": "mean binary cross entropy; p clipped to [1e-12,1-1e-12]",
+      "gradient": "parameter shift of probability, chain rule through BCE; clip derivative zero outside clipping interval",
+      "selection": "parameters after exactly 100 updates; history includes initial loss and loss after each update"
+    },
+    "metrics": {
+      "accuracy": "mean((p>=0.5)==y)",
+      "std": "sample standard deviation ddof=1",
+      "delta_pp": "100*mean(test_ZZ-test_RY)",
+      "resources": "encoding+ansatz transpiled to ry,rz,h,cx; optimization_level=0; seed_transpiler=0; input [0.3,0.7], theta zero",
+      "timing": "perf_counter training including encoding preparation, full optimization and histories; excludes evaluation, plotting, imports; RY then ZZ, serial; descriptive only"
+    },
+    "sources_checked": "2026-11-02",
+    "sources": [
+      "https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.circuit.library.RZZGate",
+      "https://quantum.cloud.ibm.com/docs/en/api/qiskit/quantum_info.Statevector"
+    ],
+    "library_versions": {
+      "qiskit": "2.6.1",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "matplotlib": "3.11.2",
+      "pytest": "9.2.0"
+    }
+  },
+  "protocol_sha256": "751fb0e6678227d6329eda6d86245dabdc713cf016e8eda3cd6e6b9ab1866f7e",
+  "validation_only": false,
+  "actual_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "actual_steps": 100
+}
