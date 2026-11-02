@@ -261,3 +261,91 @@ LaTeX używa bloków `$$` i standardowych makr, bez problematycznego `operatorna
 Dokumentacja IBM sprawdzona 2026-11-02: [RZZGate](https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.circuit.library.RZZGate), [Statevector](https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.quantum_info.Statevector). Krótszy adres Statevector w metadanych zamrożonego protokołu jest niedostępny; poprawny podano tutaj bez zmiany protokołu. API zweryfikowano też testami z Qiskit 2.6.1.
 
 **Wszystkie nowe zmiany i wyniki pozostają lokalnie. W tym zadaniu nie wykonano push ani żadnej zmiany zdalnego repozytorium.**
+
+## Audyt metodologiczny i replikacja post hoc
+
+**POST-HOC REPLICATION — kontrola metodologiczna z 2026-11-02.** To osobne badanie po poznaniu wyników, a nie nowa prerejestracja ani zastąpienie pierwszego eksperymentu. Oryginalna hipoteza, protocol, wyniki i commit `9584308c16d6bae49561f2865bcdb90a978b5da1` pozostają zachowane. Ich niezmienność jest kontrolowana bajtowo przez [manifest oryginałów](replications/rng_independent/original_manifest.json).
+
+### Wada i jej matematyczna weryfikacja
+
+Osobne wywołania `default_rng(seed)` nie dają niezależnych strumieni: rozpoczynają tę samą sekwencję. Dla tych samych pierwszych liczb jednostajnych u dane wynosiły `r=2*u-1`, a inicjalizacja `theta=0.2*u-0.1`. Zatem:
+
+$$
+\theta_{\mathrm{init}}=\frac{1}{10}(r_{0,0},r_{0,1},r_{1,0},r_{1,1}).
+$$
+
+Relację potwierdzono dla wszystkich seedów 0-9 z błędem poniżej 2e-17. Pierwsze dwie obserwacje nie zawsze były treningowe: próbka 1 trafiała na test przy seedzie 2, a próbka 0 przy seedach 5, 7 i 9. To pośrednia zależność inicjalizacji od cech testowych, choć kod nie odczytywał jawnie testowych etykiet w treningu. Także generator podziału ponownie startował z tego samego seeda.
+
+### Naprawa i niezmienione warunki
+
+Nowy moduł `src/replication_rng.py` tworzy dokładnie trzy dzieci `SeedSequence(seed).spawn(3)`, w ustalonej kolejności: data (spawn_key 0), split (1), initialization (2). Każde dziecko inicjalizuje osobny `default_rng` z PCG64. Zużycie jednego strumienia nie przesuwa pozostałych. Daje to zalecaną przez NumPy separację strumieni pseudolosowych z bardzo wysokim prawdopodobieństwem; skończone testy nie są dowodem absolutnej niezależności statystycznej. Dokumentacja: [NumPy SeedSequence spawning](https://numpy.org/doc/stable/reference/random/parallel.html), sprawdzona 2026-11-02, zainstalowane NumPy 2.5.4.
+
+Każda para RY/ZZ otrzymuje ten sam dataset i podział oraz kopie tej samej inicjalizacji. Pozostają 2 kubity, 1000 obserwacji, 800/200 train/test, XOR, skalowanie, stratyfikacja, obie definicje encodingów, dwie warstwy ansatzu, Z0, BCE, Adam 0.05 i 100 kroków oraz seedy 0-9. Kod modelu i treningu jest używany bez zmian. Oryginalna ścieżka RNG pozostaje zamrożona wyłącznie do historycznego odtworzenia; replikację uruchamia osobny skrypt.
+
+Plan replikacji zapisano przed pełnym uruchomieniem w [osobnym protokole](replications/rng_independent/protocol.json); hashe kodu i protokołu zapisano w [prerun.json](replications/rng_independent/prerun.json). Nie dobierano seedów ani ustawień po wynikach. Wszystkie nowe artefakty są w `replications/rng_independent/`, a wiersze CSV, konfiguracje, historie i wykresy mają oznaczenie POST-HOC REPLICATION.
+
+### Wyniki kontrolne
+
+| Encoding | Oryginał: test mean ± SD (%) | POST-HOC REPLICATION: test mean ± SD (%) | Zmiana średniej (pp) |
+| --- | ---: | ---: | ---: |
+| RY | 97.10 ± 1.70 | 97.00 ± 2.01 | -0.10 |
+| ZZ | 58.45 ± 2.94 | 61.90 ± 4.29 | +3.45 |
+
+| Seed | RY train (%) | RY test (%) | ZZ train (%) | ZZ test (%) | ZZ - RY (pp) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 98.500 | 99.000 | 61.375 | 56.000 | -43.00 |
+| 1 | 97.625 | 99.500 | 62.250 | 62.500 | -37.00 |
+| 2 | 98.500 | 97.000 | 60.125 | 54.000 | -43.00 |
+| 3 | 98.000 | 99.500 | 57.750 | 62.500 | -37.00 |
+| 4 | 95.500 | 93.500 | 60.500 | 64.000 | -29.50 |
+| 5 | 97.750 | 95.500 | 63.000 | 60.500 | -35.00 |
+| 6 | 97.500 | 95.500 | 62.125 | 63.000 | -32.50 |
+| 7 | 98.125 | 98.000 | 61.875 | 62.000 | -36.00 |
+| 8 | 97.625 | 95.500 | 59.250 | 68.500 | -27.00 |
+| 9 | 96.875 | 97.000 | 60.750 | 66.000 | -31.00 |
+
+
+Średnia sparowana różnica ZZ minus RY w replikacji wynosi **-35.10 pp**, SD różnicy **5.31 pp**, wobec **-38.65 pp** w oryginale. RY wygrywa we wszystkich 10 parach; kierunek przewagi pozostaje stabilny. Przewidywanie +5 pp dla ZZ nie zostało spełnione w tej kontroli; ta ocena post hoc nie zmienia historycznego wyniku hipotezy.
+
+Źródła: [CSV](replications/rng_independent/results/metrics.csv), [summary JSON](replications/rng_independent/results/summary.json), [historie i hashe par](replications/rng_independent/results/histories.json), [porównanie badań](replications/rng_independent/comparison.json).
+
+### Nieaktywny parametr i interpretacja
+
+Nie zmieniono architektury. Dla C=CX(0,1) i końcowego obrotu RY na kubicie 1 zachodzi:
+
+$$
+C^{\dagger} Z_0 C=Z_0,\qquad [R_{Y,1}(\theta_3),Z_0]=0.
+$$
+
+Dlatego odczyt i loss są niezależne od theta3; jego gradient jest analitycznie zerowy. Modele nadal mają cztery nominalne parametry, ale co najwyżej trzy aktywne w predykcji. To własność odczytu, nie dowód barren plateau. Usunięcie parametru zmieniłoby prerejestrowaną architekturę i nie jest częścią tej kontroli.
+
+Replikacja ocenia stabilność wyniku po rozdzieleniu RNG. Zmienia realizacje danych, podziałów i inicjalizacji jednocześnie; różnic między badaniami nie można przypisać wyłącznie usunięciu sprzężenia inicjalizacji. Ten sam numer seeda nie oznacza tej samej próbki między badaniami. Nie stosujemy więc interpretacji sparowanego efektu przyczynowego między oryginałem a kontrolą.
+
+Nadal nie rozdzielono ograniczeń reprezentacji ZZ, odczytu i optymalizacji. Mały ansatz, jeden generator XOR, brak szumu i jeden budżet nie uzasadniają ogólnej wyższości RY. SD obejmuje zmienność danych, podziałów i inicjalizacji; nie jest samą zmiennością inicjalizacji. Wynik nie dowodzi mechanizmu przyczynowego ani przewagi kwantowej.
+
+### Wykresy i walidacja
+
+Wszystkie nowe wykresy mają nagłówek POST-HOC REPLICATION. Accuracy ma skalę 0-100%, zasoby i czasy zaczynają się od zera. Źródła serii i hashe PNG są zapisane obok wykresów.
+
+![POST-HOC REPLICATION: accuracy](replications/rng_independent/figures/test_accuracy_comparison.png)
+
+![POST-HOC REPLICATION: loss](replications/rng_independent/figures/train_loss.png)
+
+![POST-HOC REPLICATION: różnice](replications/rng_independent/figures/paired_differences.png)
+
+![POST-HOC REPLICATION: zasoby](replications/rng_independent/figures/circuit_resources.png)
+
+![POST-HOC REPLICATION: czas](replications/rng_independent/figures/training_time.png)
+
+Testy regresyjne sprawdzają odtwarzalność, przypisanie dzieci SeedSequence, separację zużycia strumieni, zerwanie dawnego sprzężenia, wspólne dane/podział/inicjalizację par oraz zachowanie oryginalnych plików i odtwarzanie dawnych datasetów. Pełne odtworzenie replikacji porównuje parametry, historie, dane i metryki; wyłącza niedeterministyczny czas. Audyt porównuje zapisane predykcje z Qiskit i sprawdza zgodność CSV, JSON, README oraz danych wykresów.
+
+```powershell
+.\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider
+.\.venv\Scripts\python.exe -B run_rng_replication.py --audit
+.\.venv\Scripts\python.exe -B run_rng_replication.py --reproduce .venv/posthoc-reproduction-check
+.\.venv\Scripts\python.exe -B audit_rng_replication.py --check
+```
+
+Pierwsze uruchomienie nowej replikacji, wyłącznie gdy osobny katalog wyników jeszcze nie istnieje: `python run_rng_replication.py`. Program odmawia nadpisania wcześniejszych pomiarów. Nie uruchamiaj ponownie starego generatora raportu `audit/write_report.py` do aktualizacji tego dodatku — dotyczy on wyłącznie pierwszego badania. Żadna kontrola nie wymaga nadpisywania oryginalnych wyników.
+
+Testów niezależności RNG nie należy interpretować jako matematycznego dowodu niezależności wszystkich strumieni. Nie sprawdzono innego środowiska, alternatywnego ansatzu ani renderowania tej lokalnej sekcji na GitHubie. **Nie wykonano push.**

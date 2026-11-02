@@ -1,0 +1,54 @@
+{
+  "study": "POST-HOC REPLICATION",
+  "commands": [
+    {
+      "command": "pytest tests/test_rng_replication.py (RED)",
+      "exit": 1,
+      "result": "missing src.replication_rng before implementation"
+    },
+    {
+      "command": "pytest tests/test_rng_replication.py (GREEN)",
+      "exit": 0,
+      "result": "7 passed in 12.08s"
+    },
+    {
+      "command": "pytest full suite before full replication",
+      "exit": 0,
+      "result": "27 passed in 14.40s"
+    },
+    {
+      "command": "run_rng_replication.py",
+      "exit": 0,
+      "result": "10 paired repetitions, 100 steps, no selection"
+    },
+    {
+      "command": "run_rng_replication.py --reproduce .venv/posthoc-rng-reproduction",
+      "exit": 0,
+      "result": "20 models, exact parameters/histories/metrics, wall time excluded"
+    },
+    {
+      "study": "POST-HOC REPLICATION",
+      "command": "C:\\Users\\litez\\Documents\\Projekty\\quantum-data-encoding\\.venv\\Scripts\\python.exe -B -m pytest -q -p no:cacheprovider",
+      "exit": 0,
+      "log": "tests.log"
+    },
+    {
+      "study": "POST-HOC REPLICATION",
+      "command": "C:\\Users\\litez\\Documents\\Projekty\\quantum-data-encoding\\.venv\\Scripts\\python.exe -B run_experiment.py --audit",
+      "exit": 0,
+      "log": "original_audit.log"
+    },
+    {
+      "study": "POST-HOC REPLICATION",
+      "command": "C:\\Users\\litez\\Documents\\Projekty\\quantum-data-encoding\\.venv\\Scripts\\python.exe -B audit_rng_replication.py --check",
+      "exit": 0,
+      "log": "final_audit.log"
+    },
+    {
+      "study": "POST-HOC REPLICATION",
+      "command": "git diff --check",
+      "exit": 0,
+      "log": "diff_check.log"
+    }
+  ]
+}

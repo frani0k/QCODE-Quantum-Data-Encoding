@@ -1,0 +1,23 @@
+{
+  "study": "POST-HOC REPLICATION",
+  "comparison": "Descriptive across studies, not paired causal changes",
+  "variants": {
+    "RY": {
+      "original_test_mean": 0.9710000000000001,
+      "replication_test_mean": 0.9700000000000001,
+      "original_test_std": 0.016964014199999284,
+      "replication_test_std": 0.02013840995599095,
+      "change_pp": -0.10000000000000009
+    },
+    "ZZ": {
+      "original_test_mean": 0.5845,
+      "replication_test_mean": 0.6190000000000001,
+      "original_test_std": 0.02938726103452158,
+      "replication_test_std": 0.042934057964899304,
+      "change_pp": 3.4500000000000086
+    }
+  },
+  "original_delta_pp": -38.65,
+  "replication_delta_pp": -35.1,
+  "RY_wins_all_replication_pairs": true
+}

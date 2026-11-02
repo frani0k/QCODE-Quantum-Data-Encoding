@@ -1,0 +1,23 @@
+{
+  "study": "POST-HOC REPLICATION",
+  "RY": {
+    "depth": 5,
+    "two_qubit_gates": 2,
+    "gate_counts": {
+      "ry": 6,
+      "cx": 2
+    },
+    "trainable_parameters": 4
+  },
+  "ZZ": {
+    "depth": 9,
+    "two_qubit_gates": 4,
+    "gate_counts": {
+      "cx": 4,
+      "ry": 4,
+      "rz": 3,
+      "h": 2
+    },
+    "trainable_parameters": 4
+  }
+}

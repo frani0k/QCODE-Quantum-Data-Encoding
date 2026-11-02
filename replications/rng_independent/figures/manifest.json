@@ -1,0 +1,10 @@
+{
+  "study": "POST-HOC REPLICATION",
+  "sha256": {
+    "circuit_resources.png": "c79acdbc49ff4c3f4145d97d2406fbb2bb863176fae73a6387287206abc77e08",
+    "paired_differences.png": "00529f43a666a8fc5627fe81acbde63182524dacccde560d925db155fc3ea828",
+    "test_accuracy_comparison.png": "ce3dc23b19e40b39421b62a1f30d3f68b094d75695e6b04130cb1806e5570a36",
+    "training_time.png": "0916f9830c2a4f89132eb0b23be605d6ecafe718ca6c893fe82b27c9919689c7",
+    "train_loss.png": "edb962fc8ff98cd00fb1512f2a5794fe3f5cbab138ae7b5297c016bc2d8363e7"
+  }
+}

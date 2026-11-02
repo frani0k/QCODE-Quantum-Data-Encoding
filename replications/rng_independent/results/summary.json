@@ -1,0 +1,52 @@
+{
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "RY": {
+    "test_mean": 0.9700000000000001,
+    "test_std": 0.02013840995599095,
+    "train_accuracy_mean": 0.976,
+    "train_accuracy_std": 0.008834905520465718,
+    "training_seconds_mean": 1.85888848999748,
+    "training_seconds_std": 0.5096303226219775,
+    "final_loss_mean": 0.3763245256192351,
+    "final_loss_std": 0.007275468223199531,
+    "generalization_gap_mean": 0.005999999999999994
+  },
+  "ZZ": {
+    "test_mean": 0.6190000000000001,
+    "test_std": 0.042934057964899304,
+    "train_accuracy_mean": 0.609,
+    "train_accuracy_std": 0.01575418815567608,
+    "training_seconds_mean": 2.3002225799980804,
+    "training_seconds_std": 0.6570339135718827,
+    "final_loss_mean": 0.6637715882783048,
+    "final_loss_std": 0.007260168862798323,
+    "generalization_gap_mean": -0.010000000000000009
+  },
+  "delta_pp": -35.1,
+  "delta_std_pp": 5.306180882287708,
+  "paired_delta_pp": [
+    -42.99999999999999,
+    -37.0,
+    -42.99999999999999,
+    -37.0,
+    -29.500000000000004,
+    -35.0,
+    -32.49999999999999,
+    -36.0,
+    -26.99999999999999,
+    -30.999999999999993
+  ],
+  "prediction_met": false,
+  "study": "POST-HOC REPLICATION"
+}

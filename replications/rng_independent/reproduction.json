@@ -1,0 +1,12 @@
+{
+  "study": "POST-HOC REPLICATION",
+  "passed": true,
+  "models": 20,
+  "excluded": "wall-clock training_seconds",
+  "compared": [
+    "parameters",
+    "histories",
+    "metrics",
+    "data and split hashes"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "study": "POST-HOC REPLICATION",
+  "before_full_replication": true,
+  "tests": "27 passed; exit 0",
+  "RED": "ModuleNotFoundError src.replication_rng; exit 1",
+  "sha256": {
+    "src/replication_rng.py": "4140739a253d1da506b900ec9e49695bee84585fc1bd5dc09d71ef3596551cdf",
+    "run_rng_replication.py": "69f476fbd53794c122582628fa188d82a7191e56c3d9836e58aee0ff8a4cb744",
+    "replications/rng_independent/protocol.json": "3742b05a797ab2ba0bee56036f80519792df8109f9a24f41087bef1da74a34fb"
+  }
+}
