@@ -66,7 +66,9 @@ Przewidywanie zostaje obalone w tym zaplanowanym eksperymencie, jeśli średnia 
 
 ## Implementacja i zamrożony protokół
 
-Eksperyment wykonano lokalnie 2026-11-02 po prerejestracji. Commit hipotezy: `73994d8d863ad04dfb5d80a8ed004c5c67165b68`. W tym commicie znajdowały się README i puste pliki, bez wyników. Powyższa hipoteza, plan i kryterium obalenia zachowują pierwotną treść.
+Publiczne repozytorium: [QCODE-Quantum-Data-Encoding](https://github.com/frani0k/QCODE-Quantum-Data-Encoding).
+
+Eksperyment przeprowadzono 2026-11-02 po prerejestracji. Commit hipotezy: `73994d8d863ad04dfb5d80a8ed004c5c67165b68`. W tym commicie znajdowały się README i puste pliki, bez wyników. Powyższa hipoteza, plan i kryterium obalenia zachowują pierwotną treść.
 
 Pełny protokół: [experiment_protocol.json](experiment_protocol.json). Hash protokołu i kodu sprzed uruchomienia: [audit/prerun.json](audit/prerun.json). Kopia konfiguracji i hash przy wynikach: [results/configuration.json](results/configuration.json). Nie zmieniano protokołu po obejrzeniu wyników.
 
@@ -74,7 +76,7 @@ Użyto Python 3.14.0, Qiskit 2.6.1, NumPy 2.5.4, Matplotlib 3.11.2 i pytest 9.2.
 
 Dla każdego seeda generuje się 1000 punktów o dwóch niezależnych cechach Uniform[-1,1). Etykieta to `int(x0*x1 < 0)`, bez szumu. Skalowanie `(x+1)*pi/2` korzysta ze znanych granic, bez dopasowywania na teście. Stratyfikacja przydziela klasom zaokrąglone w dół kwoty testowe, a pozostałe miejsca według największej części ułamkowej, z remisem na rzecz klasy 0. Jest dokładnie 800 obserwacji treningowych i 200 testowych. Dane, indeksy oraz etykiety zapisano w `results/dataset_seed_*.npz`.
 
-Generowanie, podział i inicjalizacja używają niezależnych instancji `default_rng(seed)`. W parze RY/ZZ dane, podział i cztery parametry początkowe są identyczne. Nie wybiera się najlepszego seeda ani najlepszego kroku.
+W pierwszym eksperymencie generowanie, podział i inicjalizacja używały osobnych instancji `default_rng(seed)` z tym samym seedem. Nie były to niezależne strumienie; wykryte sprzężenie i jego kontrolną replikację opisano w sekcji audytu metodologicznego. W parze RY/ZZ dane, podział i cztery parametry początkowe są identyczne. Nie wybiera się najlepszego seeda ani najlepszego kroku.
 
 ### Konwencje bramek i trening
 
@@ -211,11 +213,11 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 $env:PYTHONUTF8 = '1'
 .\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider
-.\.venv\Scripts\python.exe run_experiment.py --audit
+.\.venv\Scripts\python.exe -B audit/final_audit.py
 .\.venv\Scripts\python.exe run_experiment.py --reproduce .venv/reproduction-check
 ```
 
-Odtwarzanie wymaga nowej, pustej ścieżki wyjściowej. Wykonuje wszystkie 20 treningów, porównuje dokładnie parametry, historie i metryki, z wyjątkiem niedeterministycznego czasu ściennego. Potwierdzenie zapisuje do `results/reproduction.json`. Pierwsze uruchomienie w kopii z pustym results:
+Polecenia `--reproduce` należy uruchamiać w roboczej kopii repozytorium: oprócz nowych pomiarów zapisują plik potwierdzenia odtworzenia. Pozwala to zachować nawet historyczne potwierdzenia bez nadpisywania. Odtwarzanie wymaga nowej, pustej ścieżki wyjściowej. Wykonuje wszystkie 20 treningów, porównuje dokładnie parametry, historie i metryki, z wyjątkiem niedeterministycznego czasu ściennego. Potwierdzenie zapisuje do `results/reproduction.json`. Pierwsze uruchomienie w kopii z pustym results:
 
 ```powershell
 .\.venv\Scripts\python.exe run_experiment.py
@@ -223,48 +225,64 @@ Odtwarzanie wymaga nowej, pustej ścieżki wyjściowej. Wykonuje wszystkie 20 tr
 
 Program odmawia nadpisywania wyników. Nie usuwaj zapisanych pomiarów do kontroli odtwarzalności; użyj `--reproduce`.
 
-## Struktura po implementacji
+## Struktura projektu
 
 ```text
-quantum-data-encoding/
+QCODE-Quantum-Data-Encoding/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
 ├── experiment_protocol.json
 ├── run_experiment.py
+├── run_rng_replication.py
+├── audit_rng_replication.py
 ├── src/
+│   ├── __init__.py
 │   ├── encoding.py
 │   ├── dataset.py
+│   ├── replication_rng.py
 │   ├── variational_classifier.py
 │   ├── training.py
-│   ├── evaluation.py
-│   └── __init__.py, data.py, encodings.py, model.py, train.py, evaluate.py
+│   └── evaluation.py
 ├── tests/
 │   ├── test_qcode.py
-│   └── test_data.py, test_encodings.py, test_model.py
+│   ├── test_rng_replication.py
+│   └── test_repository.py
 ├── audit/
+│   ├── final_audit.py
+│   ├── provenance.py
+│   ├── readme.py
+│   └── prerun.json
 ├── results/
 ├── figures/
-└── data/
+└── replications/rng_independent/
+    ├── protocol.json
+    ├── prerun.json
+    ├── original_manifest.json
+    ├── comparison.json
+    ├── reproduction.json
+    ├── results/
+    └── figures/
 ```
 
-Stare pliki szkieletu i `__init__.py` pozostają puste. Nowe moduły realizują nazwy wymagane przez zadanie. Data pozostaje pusty, dane odtwarzalne są przy wynikach. `.venv`, cache i pyc są ignorowane przez Git.
+Katalog results zawiera dane syntetyczne, podziały, parametry, metryki i historie pierwszego badania. Oddzielny katalog replikacji przechowuje analogiczne artefakty oznaczone POST-HOC REPLICATION. Protokoły i pomiary zachowano bez zmian. Nieużywane, puste pliki początkowego szkieletu oraz operacyjne logi przygotowania repozytorium pozostają dostępne w historii Git. Usunięcie ich z bieżącego drzewa nie oznacza usunięcia z historii.
+
+Manifest proweniencji zachowuje historyczne sumy kontrolne. Audyt wymaga pełnej historii Git, np. zwykłego klonowania bez opcji `--depth`. Dla archiwalnych plików tekstowych uwzględnia normalizację końców linii LF/CRLF wykonywaną przez Git. Aktywne pliki badawcze są nadal kontrolowane przez swoje zapisane sumy SHA-256. Środowiska `.venv`, cache i pliki pyc są wykluczone z repozytorium.
 
 ## Testy, audyt i źródła
 
-Przeszło 20 testów: analityczne RY i ZZ, zależność członu ZZ od cech, normalizacja, zerowa interakcja, generowanie etykiet, podział bez przecieku, pomiar i klasyfikacja, liczba parametrów, batch kontra Qiskit, gradienty, odtwarzalność treningu, punkty procentowe, zapis/odczyt i przepływ wyników. Dodatkowe kontrole opisują obojętny parametr i reprezentację XOR. Testy nie są dowodem hipotezy.
+Bateria testów obejmuje: analityczne RY i ZZ, zależność członu ZZ od cech, normalizacja, zerowa interakcja, generowanie etykiet, podział bez przecieku, pomiar i klasyfikacja, liczba parametrów, batch kontra Qiskit, gradienty, odtwarzalność treningu, punkty procentowe, zapis/odczyt i przepływ wyników. Dodatkowe kontrole opisują obojętny parametr i reprezentację XOR. Testy nie są dowodem hipotezy.
 
-Pełne odtworzenie 20 modeli sprawdza parametry, historie i metryki; czasu nie porównuje na równość. Dzienniki są w audit. Audyt obejmuje zachowanie prerejestracji i hash protokołu, kod, CSV/JSON/README, źródła wykresów, PNG i historię Git.
+Pełne odtworzenie 20 modeli sprawdza parametry, historie i metryki; czasu nie porównuje na równość. Kod niezależnej walidacji znajduje się w katalogu audit i w testach. Audyt obejmuje zachowanie prerejestracji i hash protokołu, kod, CSV/JSON/README, źródła wykresów, PNG i historię Git.
 
-LaTeX używa bloków `$$` i standardowych makr, bez problematycznego `operatorname`. Nie sprawdzono renderowania nowego README na GitHubie, ponieważ zmian nie publikowano.
+Wzory używają bloków `$$` i standardowych makr obsługiwanych przez GitHub Markdown. Treść i odwołania sprawdzają audyty; rzeczywiste renderowanie matematyki na GitHubie nie zostało wizualnie zweryfikowane.
 
 Dokumentacja IBM sprawdzona 2026-11-02: [RZZGate](https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.circuit.library.RZZGate), [Statevector](https://quantum.cloud.ibm.com/docs/en/api/qiskit/qiskit.quantum_info.Statevector). Krótszy adres Statevector w metadanych zamrożonego protokołu jest niedostępny; poprawny podano tutaj bez zmiany protokołu. API zweryfikowano też testami z Qiskit 2.6.1.
 
-**Wszystkie nowe zmiany i wyniki pozostają lokalnie. W tym zadaniu nie wykonano push ani żadnej zmiany zdalnego repozytorium.**
 
 ## Audyt metodologiczny i replikacja post hoc
 
-**POST-HOC REPLICATION — kontrola metodologiczna z 2026-11-02.** To osobne badanie po poznaniu wyników, a nie nowa prerejestracja ani zastąpienie pierwszego eksperymentu. Oryginalna hipoteza, protocol, wyniki i commit `9584308c16d6bae49561f2865bcdb90a978b5da1` pozostają zachowane. Ich niezmienność jest kontrolowana bajtowo przez [manifest oryginałów](replications/rng_independent/original_manifest.json).
+**POST-HOC REPLICATION — kontrola metodologiczna z 2026-11-02.** To osobne badanie po poznaniu wyników, a nie nowa prerejestracja ani zastąpienie pierwszego eksperymentu. Oryginalna hipoteza, protokół, wyniki i commit `9584308c16d6bae49561f2865bcdb90a978b5da1` pozostają zachowane. Integralność artefaktów badawczych jest kontrolowana przez [manifest oryginałów](replications/rng_independent/original_manifest.json) oraz zachowane commity Git. Manifest oddziela bieżące pliki naukowe od archiwalnych sum plików pomocniczych dostępnych w historii.
 
 ### Wada i jej matematyczna weryfikacja
 
@@ -346,6 +364,6 @@ Testy regresyjne sprawdzają odtwarzalność, przypisanie dzieci SeedSequence, s
 .\.venv\Scripts\python.exe -B audit_rng_replication.py --check
 ```
 
-Pierwsze uruchomienie nowej replikacji, wyłącznie gdy osobny katalog wyników jeszcze nie istnieje: `python run_rng_replication.py`. Program odmawia nadpisania wcześniejszych pomiarów. Nie uruchamiaj ponownie starego generatora raportu `audit/write_report.py` do aktualizacji tego dodatku — dotyczy on wyłącznie pierwszego badania. Żadna kontrola nie wymaga nadpisywania oryginalnych wyników.
+Pierwsze uruchomienie nowej replikacji, wyłącznie gdy osobny katalog wyników jeszcze nie istnieje: `python run_rng_replication.py`. Program odmawia nadpisania wcześniejszych pomiarów. Audyty `audit/final_audit.py` i `audit_rng_replication.py --check` są tylko do odczytu i nie modyfikują zapisanych wyników.
 
-Testów niezależności RNG nie należy interpretować jako matematycznego dowodu niezależności wszystkich strumieni. Nie sprawdzono innego środowiska, alternatywnego ansatzu ani renderowania tej lokalnej sekcji na GitHubie. **Nie wykonano push.**
+Testów niezależności RNG nie należy interpretować jako matematycznego dowodu niezależności wszystkich strumieni. Nie sprawdzono alternatywnego ansatzu ani wizualnego renderowania wzorów na GitHubie. Odtwarzalność zweryfikowano w świeżym środowisku z przypiętymi wersjami na Windows; innych platform nie przetestowano.
