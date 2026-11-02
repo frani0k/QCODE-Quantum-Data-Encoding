@@ -1,0 +1,15 @@
+{
+  "RY": {
+    "finite_difference_gradient_max_error": 3.618528809923305e-10,
+    "two_step_Adam_max_error": 2.7755575615628914e-16,
+    "resources_zero_equal_symbolic": true
+  },
+  "ZZ": {
+    "finite_difference_gradient_max_error": 1.1102230246251565e-10,
+    "two_step_Adam_max_error": 3.3306690738754696e-16,
+    "resources_zero_equal_symbolic": true
+  },
+  "XOR_analytic_identity": true,
+  "inactive_parameter_verified": true,
+  "verification_only_not_new_benchmark": true
+}

@@ -1,0 +1,49 @@
+.............E.E..........E                                              [100%]
+=================================== ERRORS ====================================
+______________________ ERROR at setup of test_roundtrip _______________________
+
+self = WindowsPath('C:/Users/litez/Documents/Projekty/quantum-data-encoding/.venv/prepublication_snapshot/.venv/pytest-prepublication')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] System nie może odnaleźć określonej ścieżki: 'C:\\Users\\litez\\Documents\\Projekty\\quantum-data-encoding\\.venv\\prepublication_snapshot\\.venv\\pytest-prepublication'
+
+C:\Users\litez\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+__________ ERROR at setup of test_cli_artifacts_and_frozen_protocol ___________
+
+self = WindowsPath('C:/Users/litez/Documents/Projekty/quantum-data-encoding/.venv/prepublication_snapshot/.venv/pytest-prepublication')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] System nie może odnaleźć określonej ścieżki: 'C:\\Users\\litez\\Documents\\Projekty\\quantum-data-encoding\\.venv\\prepublication_snapshot\\.venv\\pytest-prepublication'
+
+C:\Users\litez\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_____ ERROR at setup of test_small_replication_is_paired_and_reproducible _____
+
+self = WindowsPath('C:/Users/litez/Documents/Projekty/quantum-data-encoding/.venv/prepublication_snapshot/.venv/pytest-prepublication')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] System nie może odnaleźć określonej ścieżki: 'C:\\Users\\litez\\Documents\\Projekty\\quantum-data-encoding\\.venv\\prepublication_snapshot\\.venv\\pytest-prepublication'
+
+C:\Users\litez\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR tests/test_qcode.py::test_roundtrip - FileNotFoundError: [WinError 3] S...
+ERROR tests/test_qcode.py::test_cli_artifacts_and_frozen_protocol - FileNotFo...
+ERROR tests/test_rng_replication.py::test_small_replication_is_paired_and_reproducible
+24 passed, 3 errors in 6.19s

@@ -1,0 +1,12 @@
+{
+  "original": {
+    "all_test_accuracy_values_match": true,
+    "qiskit_predictions": 4000,
+    "state_normalization_checked": true
+  },
+  "POST-HOC REPLICATION": {
+    "all_test_accuracy_values_match": true,
+    "qiskit_predictions": 4000,
+    "state_normalization_checked": true
+  }
+}

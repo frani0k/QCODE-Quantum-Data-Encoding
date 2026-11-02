@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "metrics": {
+    "original": {
+      "RY_mean_percent": 97.10000000000001,
+      "RY_SD_pp": 1.6964014199999284,
+      "ZZ_mean_percent": 58.45,
+      "ZZ_SD_pp": 2.9387261034521583,
+      "delta_pp": -38.65
+    },
+    "post_hoc": {
+      "RY_mean_percent": 97.00000000000001,
+      "RY_SD_pp": 2.013840995599095,
+      "ZZ_mean_percent": 61.90000000000001,
+      "ZZ_SD_pp": 4.293405796489931,
+      "delta_pp": -35.1
+    }
+  },
+  "timestamps_checked": [
+    {
+      "hash": "73994d8d863ad04dfb5d80a8ed004c5c67165b68",
+      "author_date": "2026-11-01T15:35:46+01:00",
+      "committer_date": "2026-11-01T15:35:46+01:00",
+      "parents": "",
+      "subject": "initial commit - readme"
+    },
+    {
+      "hash": "9584308c16d6bae49561f2865bcdb90a978b5da1",
+      "author_date": "2026-11-02T00:37:04+01:00",
+      "committer_date": "2026-11-02T00:37:04+01:00",
+      "parents": "4fcc280a6fada281537dd93146e455944dddf57d",
+      "subject": "Challenge 3: implement QCODE and report encoding results"
+    },
+    {
+      "hash": "b0a93e128ae65ed21e9e570674a42edd848df33c",
+      "author_date": "2026-11-02T16:29:33+01:00",
+      "committer_date": "2026-11-02T16:29:33+01:00",
+      "parents": "9584308c16d6bae49561f2865bcdb90a978b5da1",
+      "subject": "Challenge 3: add post-hoc RNG replication and methodology audit"
+    }
+  ],
+  "timestamp_limit": "Git metadata, not an external trusted timestamp",
+  "tracked_file_count": 95,
+  "tracked_total_bytes": 1454440,
+  "files_over_5MiB": [],
+  "credential_patterns": "no matches in tracked text files",
+  "README": "UTF-8, local links, numbers and math delimiters checked; no GitHub rendering claimed",
+  "dependencies": "all 22 requirements pinned; fresh installation separately tested",
+  "limitations": [
+    "historical RNG coupling retained and disclosed",
+    "resource protocol says theta zero while implementation uses symbolic theta; no accuracy effect",
+    "reproduce commands rewrite attestations; executed only in isolated copy",
+    "no universal encoding superiority or causal identification",
+    "no external official Axion rubric supplied beyond user requirements"
+  ]
+}
